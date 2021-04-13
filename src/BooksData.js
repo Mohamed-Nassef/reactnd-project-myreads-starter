@@ -1,18 +1,16 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import * as BooksAPI from "./BooksAPI";
-import "./App.css";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import * as BooksAPI from './BooksAPI';
+import './App.css';
 import BookShelf from './BookShelf';
 
 
 class BooksData extends React.Component {
     state = {};
 
-    //To filter the books depending on a shelf
-    updateShelf = (bookId, event) => {
-        //get the book on shelf from app
+    updateShelf = (Id, event) => {
         let currentBooks = this.props.currentBooks;
-        const book = currentBooks.filter(book => book.id === bookId)[0];
+        const book = currentBooks.filter(book => book.id === Id)[0];
         book.shelf = event.target.value;
         BooksAPI.update(book, event.target.value).then(response => {
             this.setState({
@@ -28,7 +26,6 @@ class BooksData extends React.Component {
                     <h1>MyReads</h1>
                 </div>
                 <div className="list-books-content">
-                    {/*Display the three different shelves in main pages with its current books*/}
                     <BookShelf
                         key="currently"
                         books={this.props.currentBooks.filter(book => book.shelf === "currentlyReading")}

@@ -1,46 +1,40 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import * as BooksAPI from "./BooksAPI";
-import "./App.css";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import * as BooksAPI from './BooksAPI';
+import './App.css';
 
 class Search extends React.Component {
     state = {
-        query: "",
+        query: '',
         books: []
     }
-    updateQuery = (query) => {
-        this.setState({ query: query })
-        if (query) {
-            BooksAPI.search(query, 20).then((books) => {
-                books.length > 0 ? this.updateData(books) : this.setState({ books: [] })
-            }).catch((err) => {
-                console.error(`The API responded with an error: ${err}`);
-            })
-        }
-        else { this.setState({ books: [] }) }
-    }
     updateData = (books) => {
-        const cBooks = books.map(book => {
+        const x = books.map(book => {
             book.shelf = "none";
-            this.props.currentBooks.forEach(book2 => {
-                if (book.id === book2.id) {
-                    book.shelf = book2.shelf;
-                }
+            this.props.currentBooks.forEach(B => {
+                if (book.id === B.id) { book.shelf = B.shelf }
             })
             return book
         })
-        this.setState({
-            books: cBooks
-        })
+        this.setState({ books: x })
     }
     updateBooks = (book, shelf) => {
-        let current = this.state.books;
-        const bookToUpdate = current.filter(cBook => cBook.id === book.id)[0];
+        let currentBook = this.state.books;
+        const bookToUpdate = currentBook.filter(x => x.id === book.id)[0];
         bookToUpdate.shelf = shelf;
         this.setState({
-            books: current
+            books: currentBook
         })
         this.props.updateShelf(book, shelf);
+    }
+    updateQuery = (val) => {
+        this.setState({ query: val })
+        if (val) {
+            BooksAPI.search(val, 10).then((books) => {
+                books.length > 0 ? this.updateData(books) : this.setState({ books: [] })
+            });
+        }
+        else { this.setState({ books: [] }) }
     }
 
     render() {
